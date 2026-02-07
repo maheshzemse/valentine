@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Will You Be My Valentine? 💖</title>
+    <title>Harshada Will You Be My Valentine? 💖</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -51,8 +51,8 @@
             justify-content: center;
             gap: 2rem;
             margin-top: 1.5rem;
-            height: 120px; /* ⬅️ taller area for safe movement */
-            overflow: hidden; /* ⬅️ prevent escape */
+            height: 120px;
+            overflow: hidden;
         }
 
         .glow-btn {
@@ -99,6 +99,27 @@
             from { transform: translateY(0) rotate(0deg); }
             to { transform: translateY(110vh) rotate(360deg); }
         }
+
+        .option-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .option-card {
+            background: #fff0f5;
+            border-radius: 20px;
+            padding: 20px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .option-card:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+        }
     </style>
 </head>
 <body>
@@ -107,18 +128,34 @@
     <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
 </audio>
 
+<!-- Question Card -->
 <div class="card" id="questionCard">
-    <h2>💌 Will you be my Valentine?</h2>
+    <h2>💌 Harshada Will you be my Valentine?</h2>
     <div class="btn-container" id="btnContainer">
         <button class="btn btn-success btn-lg glow-btn" id="yesBtn" onclick="sayYes()">Yes 💖</button>
         <button class="btn btn-danger btn-lg" id="noBtn">No 😢</button>
     </div>
 </div>
 
+<!-- YES Success Card -->
 <div class="card hidden" id="yesCard">
-    <h1 class="text-success">🎉 YAY!!!</h1>
-    <h4>Best decision ever 💕</h4>
-    <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" alt="Happy Dance">
+    <h1>🎉 Yay! 🥰</h1>
+    <h4>I knew you would choose Yes! 💖</h4>
+    <p class="mt-3">How do you want to celebrate Valentine’s? 🌹</p>
+
+    <div class="option-grid">
+        <div class="option-card" onclick="showPlan('home')">🏠<br><strong>At Home</strong><br><small>Cozy & romantic</small></div>
+        <div class="option-card" onclick="showPlan('restaurant')">🍽️<br><strong>At Restaurant</strong><br><small>Fine dining</small></div>
+        <div class="option-card" onclick="showPlan('cafe')">☕<br><strong>At Cafe</strong><br><small>Sweet & casual</small></div>
+        <div class="option-card" onclick="showPlan('picnic')">🧺<br><strong>Picnic</strong><br><small>Nature & fun</small></div>
+    </div>
+</div>
+
+<!-- Final Romantic Message Card -->
+<div class="card hidden" id="finalCard">
+    <h1 id="finalTitle">💖</h1>
+    <h4 id="finalMessage"></h4>
+    <img id="finalGif" src="" alt="Romantic moment">
 </div>
 
 <script>
@@ -126,25 +163,19 @@
     const container = document.getElementById("btnContainer");
     const yesBtn = document.getElementById("yesBtn");
 
-    // Start music on first click anywhere
     document.addEventListener("click", function playOnce() {
         document.getElementById("bgMusic").play().catch(() => {});
         document.removeEventListener("click", playOnce);
     });
 
-    // Desktop: move NO button when mouse is near
     document.addEventListener("mousemove", function (e) {
         const rect = noBtn.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
         const distance = Math.hypot(e.clientX - centerX, e.clientY - centerY);
-
-        if (distance < 120) {
-            moveNoButton();
-        }
+        if (distance < 120) moveNoButton();
     });
 
-    // Mobile: move NO button on touch
     document.addEventListener("touchstart", function () {
         moveNoButton();
     });
@@ -153,11 +184,10 @@
         const containerRect = container.getBoundingClientRect();
         const btnWidth = noBtn.offsetWidth;
         const btnHeight = noBtn.offsetHeight;
-
         const maxX = container.clientWidth - btnWidth;
         const maxY = container.clientHeight - btnHeight;
 
-        let x, y;
+        let x, y, overlap;
         let attempts = 0;
 
         do {
@@ -172,7 +202,7 @@
                 bottom: containerRect.top + y + btnHeight
             };
 
-            var overlap =
+            overlap =
                 noRect.right > yesRect.left &&
                 noRect.left < yesRect.right &&
                 noRect.bottom > yesRect.top &&
@@ -190,9 +220,48 @@
         document.getElementById("questionCard").classList.add("hidden");
         document.getElementById("yesCard").classList.remove("hidden");
         launchConfetti();
+        launchConfetti();
     }
 
-    // Floating hearts
+    function showPlan(type) {
+        document.getElementById("yesCard").classList.add("hidden");
+        const finalCard = document.getElementById("finalCard");
+        finalCard.classList.remove("hidden");
+
+        const title = document.getElementById("finalTitle");
+        const message = document.getElementById("finalMessage");
+        const gif = document.getElementById("finalGif");
+
+        const plans = {
+            home: {
+                title: "🏠 Cozy Night In 💕",
+                message: "Candle lights, your smile, and endless cuddles — I can’t wait to be with you, Harshada 💖",
+                gif: "https://media.giphy.com/media/3oz8xKaR836UJOYeOc/giphy.gif"
+            },
+            restaurant: {
+                title: "🍽️ Romantic Dinner Date 💖",
+                message: "A candlelight dinner with you is my dream Valentine’s night, my love 🥰",
+                gif: "https://media.giphy.com/media/26FLdmIp6wJr91JAI/giphy.gif"
+            },
+            cafe: {
+                title: "☕ Sweet Coffee Date 💗",
+                message: "Coffee, laughter, and you — the perfect recipe for my heart ❤️",
+                gif: "https://media.giphy.com/media/l0MYC0LajbaPoEADu/giphy.gif"
+            },
+            picnic: {
+                title: "🧺 Romantic Picnic 💞",
+                message: "Under the sky, beside you, holding hands — my favorite place is with you 💖",
+                gif: "https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif"
+            }
+        };
+
+        title.textContent = plans[type].title;
+        message.textContent = plans[type].message;
+        gif.src = plans[type].gif;
+
+        launchConfetti();
+    }
+
     function createHeart() {
         const heart = document.createElement("div");
         heart.classList.add("heart");
@@ -205,7 +274,6 @@
     }
     setInterval(createHeart, 350);
 
-    // Confetti on YES
     function launchConfetti() {
         for (let i = 0; i < 150; i++) {
             const confetti = document.createElement("div");
