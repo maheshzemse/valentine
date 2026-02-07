@@ -40,7 +40,7 @@
             text-align: center;
             background: white;
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            max-width: 520px;
+            max-width: 540px;
             width: 95%;
             z-index: 10;
         }
@@ -51,7 +51,8 @@
             justify-content: center;
             gap: 2rem;
             margin-top: 1.5rem;
-            height: 90px; /* room for NO button movement */
+            height: 120px; /* ⬅️ taller area for safe movement */
+            overflow: hidden; /* ⬅️ prevent escape */
         }
 
         .glow-btn {
@@ -67,7 +68,7 @@
         #noBtn {
             position: absolute;
             left: 65%;
-            top: 0;
+            top: 10px;
             pointer-events: none;
             font-size: 1rem;
             z-index: 1000;
@@ -153,8 +154,8 @@
         const btnWidth = noBtn.offsetWidth;
         const btnHeight = noBtn.offsetHeight;
 
-        const maxX = containerRect.width - btnWidth;
-        const maxY = containerRect.height - btnHeight;
+        const maxX = container.clientWidth - btnWidth;
+        const maxY = container.clientHeight - btnHeight;
 
         let x, y;
         let attempts = 0;
@@ -178,7 +179,7 @@
                 noRect.top < yesRect.bottom;
 
             attempts++;
-        } while (overlap && attempts < 20);
+        } while (overlap && attempts < 30);
 
         noBtn.style.left = x + "px";
         noBtn.style.top = y + "px";
