@@ -96,6 +96,28 @@
             from { transform: translateY(0) rotate(0deg); }
             to { transform: translateY(110vh) rotate(360deg); }
         }
+
+        #noBtn {
+    position: fixed; /* desktop default */
+    left: 50vw;
+    top: 50vh;
+    pointer-events: none;
+    font-size: 1rem;
+    z-index: 1000;
+    transition: left 0.1s ease, top 0.1s ease, transform 0.1s ease;
+}
+
+/* 📱 Mobile fix */
+@media (max-width: 768px) {
+    #noBtn {
+        position: relative; /* stays in row */
+        left: auto;
+        top: auto;
+        transform: none;
+        pointer-events: none;
+    }
+}
+
     </style>
 </head>
 <body>
